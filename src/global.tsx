@@ -1,8 +1,8 @@
+import { Initial } from "./Initial";
+import { LocaleData } from "./type";
+import { history } from "./router";
 import { makeAutoObservable } from "mobx";
 import { normalize } from "./functions";
-import { history } from "./router";
-import { LocaleData } from "./type";
-import { Initial } from "./Initial";
 
 export class GlobalState {
   public pathname: string = normalize(history.location.pathname);
@@ -10,6 +10,10 @@ export class GlobalState {
   public lang: string = "en-US";
   public locale: LocaleData | null = null;
   public loading: boolean = false;
+  public githubToken: string = "";
+  public githubFolder: string = "";
+  public githubOwner: string = "nyhxiaoning";
+  public githubRepo: string = "gallary_d";
   constructor() {
     makeAutoObservable(this);
   }
