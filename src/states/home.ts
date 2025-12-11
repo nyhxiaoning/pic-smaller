@@ -1,4 +1,6 @@
 import { CompressOption, ProcessOutput } from "@/engines/ImageBase";
+import { increaseFileName, splitFileName } from "@/functions";
+
 import { createCompressTask } from "@/engines/transform";
 import { makeAutoObservable } from "mobx";
 
@@ -56,6 +58,7 @@ export type ImageItem = {
   height: number;
   preview?: ProcessOutput;
   compress?: ProcessOutput;
+  sharp?: ProcessOutput;
 };
 
 export class HomeState {
@@ -142,6 +145,51 @@ export class HomeState {
       percent,
       rate,
     };
+  }
+
+  renameOne(key: number, newName: string) {
+    const info = this.list.get(key);
+    if (!info) return;
+    const updated = { ...info, name: newName };
+    this.list.set(key, updated);
+  }
+
+  batchIncreaseNames() {
+    const names = new Set<string>();
+    // collect existing to keep uniqueness
+    this.list.forEach((info) => names.add(info.name));
+    const newNamesMap = new Map<number, string>();
+    this.list.forEach((info) => {
+      let candidate = info.name.replace(/\s+/g, " ");
+      let next = candidate;
+      do {
+        next = increaseFileName(next);
+      } while (names.has(next));
+      names.add(next);
+      newNamesMap.set(info.key, next);
+    });
+    newNamesMap.forEach((newName, key) => this.renameOne(key, newName));
+  }
+
+  batchRenameByPattern(baseName: string, start = 1) {
+    const base = baseName.trim();
+    if (!base) return;
+    const names = new Set<string>();
+    this.list.forEach((info) => names.add(info.name));
+    let idx = start;
+    const newNamesMap = new Map<number, string>();
+    this.list.forEach((info) => {
+      const { suffix } = splitFileName(info.name);
+      let candidate = `${base}-${idx}.${suffix}`;
+      while (names.has(candidate)) {
+        idx += 1;
+        candidate = `${base}-${idx}.${suffix}`;
+      }
+      names.add(candidate);
+      newNamesMap.set(info.key, candidate);
+      idx += 1;
+    });
+    newNamesMap.forEach((newName, key) => this.renameOne(key, newName));
   }
 }
 

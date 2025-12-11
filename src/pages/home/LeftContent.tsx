@@ -3,6 +3,7 @@ import {
   ClearOutlined,
   CloudUploadOutlined,
   DownloadOutlined,
+  EditOutlined,
   FolderAddOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -16,13 +17,17 @@ import {
 } from "@/functions";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { BatchRenameDialog } from "@/components/BatchRenameDialog";
+import { FolderSelect } from "@/components/FolderSelect";
 import { ImageInput } from "@/components/ImageInput";
 import { ProgressHint } from "@/components/ProgressHint";
+import { TokenDialog } from "@/components/TokenDialog";
 import { createImageList } from "@/engines/transform";
 import { goto } from "@/router";
 import { gstate } from "@/global";
 import { homeState } from "@/states/home";
 import { observer } from "mobx-react-lite";
+import { sharpCompress } from "@/services/sharpClient";
 import style from "./index.module.scss";
 import { uploadState } from "@/states/upload";
 import { useColumn } from "./useColumn";
@@ -93,6 +98,10 @@ export const LeftContent = observer(() => {
           )}
         </Space>
         <Space>
+          <FolderSelect />
+          <BatchRenameDialog />
+
+          {/* <TokenInput /> */}
           <Tooltip title={gstate.locale?.listAction.reCompress}>
             <Button
               disabled={disabled}
@@ -101,6 +110,29 @@ export const LeftContent = observer(() => {
                 homeState.reCompress();
               }}
             />
+          </Tooltip>
+          <Tooltip title="使用 Sharp 压缩">
+            <Button
+              disabled={disabled}
+              onClick={async () => {
+                try {
+                  gstate.loading = true;
+                  for (const [key, info] of homeState.list) {
+                    const output = await sharpCompress(info, homeState.option);
+                    const updated = { ...info, compress: output };
+                    homeState.list.set(key, updated);
+                  }
+                  message.success("Sharp 压缩完成");
+                } catch (e: any) {
+                  console.error(e);
+                  message.error(e?.message || "Sharp 压缩失败");
+                } finally {
+                  gstate.loading = false;
+                }
+              }}
+            >
+              {!isMobile && "Sharp"}
+            </Button>
           </Tooltip>
           <Button
             disabled={disabled}
@@ -111,6 +143,11 @@ export const LeftContent = observer(() => {
           >
             {!isMobile && gstate.locale?.listAction.clear}
           </Button>
+          <Tooltip title="重命名">
+            <Button disabled={disabled} icon={<EditOutlined />}>
+              {!isMobile && "重命名"}
+            </Button>
+          </Tooltip>
           <Button
             icon={<DownloadOutlined />}
             type="primary"
@@ -142,6 +179,7 @@ export const LeftContent = observer(() => {
           >
             {!isMobile && gstate.locale?.listAction.downloadAll}
           </Button>
+          <TokenDialog />
           <Tooltip title="上传到GitHub">
             <Button
               icon={<CloudUploadOutlined />}
@@ -149,20 +187,17 @@ export const LeftContent = observer(() => {
               disabled={disabled}
               onClick={async () => {
                 try {
-                  const token =
-                    gstate.githubToken ||
-                    window.prompt("输入GitHub Token", "") ||
-                    "";
-                  const folder =
-                    gstate.githubFolder ||
-                    window.prompt("输入上传文件夹路径（可留空）", "") ||
-                    "";
+                  const token = gstate.githubToken || "";
+                  const folder = gstate.githubFolder || "";
                   if (!token) {
-                    message.error("未提供GitHub Token");
+                    message.warning("请先在输入框填写 GitHub Token");
+                    return;
+                  }
+                  if (!folder) {
+                    message.warning("请先选择或新增上传文件夹");
                     return;
                   }
                   gstate.githubToken = token;
-                  gstate.githubFolder = folder || "";
                   gstate.loading = true;
                   const owner = gstate.githubOwner;
                   const repo = gstate.githubRepo;

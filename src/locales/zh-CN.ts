@@ -13,7 +13,7 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "批量添加",
     addFolder: "添加文件夹",
-    clear: "清空列表",
+    clear: "清空",
     downloadAll: "保存全部",
     downloadOne: "保存图片",
     removeOne: "移除图片",

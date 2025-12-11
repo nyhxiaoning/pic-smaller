@@ -1,17 +1,19 @@
-import { Flex, Space, Tooltip, Typography, message, theme } from "antd";
-import style from "./index.module.scss";
-import { TableProps } from "antd/es/table";
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   CheckCircleFilled,
   DeleteOutlined,
   DownloadOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
-import { gstate } from "@/global";
+import { Flex, Space, Tooltip, Typography, message, theme } from "antd";
 import { ImageItem, homeState } from "@/states/home";
-import { Indicator } from "@/components/Indicator";
 import { createDownload, formatSize, getOutputFileName } from "@/functions";
+
+import { Indicator } from "@/components/Indicator";
+import { TableProps } from "antd/es/table";
+import { gstate } from "@/global";
+import style from "./index.module.scss";
 import { useResponse } from "@/media";
 
 export function useColumn(disabled: boolean) {
@@ -155,6 +157,41 @@ export function useColumn(disabled: boolean) {
           return <Typography.Text type="danger">{format}</Typography.Text>;
         },
       },
+      {
+        dataIndex: "sharpSize",
+        align: "right",
+        className: style.nowrap,
+        title: "Sharp大小",
+        sorter(first, second) {
+          if (!first.sharp || !second.sharp) return 0;
+          return first.sharp.blob.size - second.sharp.blob.size;
+        },
+        render(_, row) {
+          if (!row.sharp) return "-";
+          const lower = row.blob.size > row.sharp.blob.size;
+          const format = formatSize(row.sharp.blob.size);
+          if (lower) {
+            return <Typography.Text type="success">{format}</Typography.Text>;
+          }
+          return <Typography.Text type="danger">{format}</Typography.Text>;
+        },
+      },
+      {
+        dataIndex: "best",
+        align: "right",
+        className: style.nowrap,
+        title: "更优",
+        render(_, row) {
+          if (!row.compress && !row.sharp) return "-";
+          const c = row.compress?.blob.size ?? Infinity;
+          const s = row.sharp?.blob.size ?? Infinity;
+          if (c === s) return "持平";
+          if (s < c) {
+            return <Typography.Text type="success">Sharp</Typography.Text>;
+          }
+          return <Typography.Text>标准</Typography.Text>;
+        },
+      },
     );
   }
 
@@ -177,6 +214,7 @@ export function useColumn(disabled: boolean) {
         return firstRate - secondRate;
       },
       render(_, row) {
+        // 对比标准压缩
         if (!row.compress) return "-";
         const lower = row.blob.size > row.compress.blob.size;
         const rate = (row.compress.blob.size - row.blob.size) / row.blob.size;
@@ -222,6 +260,23 @@ export function useColumn(disabled: boolean) {
             >
               <Tooltip title={gstate.locale?.listAction.removeOne}>
                 <DeleteOutlined />
+              </Tooltip>
+            </Typography.Link>
+            <Typography.Link
+              type="secondary"
+              disabled={disabled}
+              onClick={() => {
+                const name = window.prompt(
+                  "输入新文件名(包含扩展名)",
+                  row.name,
+                );
+                if (name && name.trim()) {
+                  homeState.renameOne(row.key, name.trim());
+                }
+              }}
+            >
+              <Tooltip title="重命名">
+                <EditOutlined />
               </Tooltip>
             </Typography.Link>
             <Typography.Link

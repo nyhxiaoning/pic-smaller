@@ -1,7 +1,7 @@
-import { filesize } from "filesize";
-import { Mimes } from "./mimes";
-import type { ImageItem } from "./states/home";
 import type { CompressOption } from "./engines/ImageBase";
+import type { ImageItem } from "./states/home";
+import { Mimes } from "./mimes";
+import { filesize } from "filesize";
 
 /**
  * Normalize pathname
@@ -199,4 +199,22 @@ export function getOutputFileName(item: ImageItem, option: CompressOption) {
   }
 
   return name + "." + resultSuffix;
+}
+
+/**
+ * Increase name number: "name(1).ext" => "name(2).ext";
+ * if no number, append "(1)" before extension
+ */
+export function increaseFileName(origin: string): string {
+  const index = origin.lastIndexOf(".");
+  if (index <= 0) return origin;
+  const base = origin.substring(0, index);
+  const ext = origin.substring(index + 1);
+  const m = base.match(/^(.*)\((\d+)\)$/);
+  if (m) {
+    const head = m[1];
+    const num = parseInt(m[2], 10) + 1;
+    return `${head}(${num}).${ext}`;
+  }
+  return `${base}(1).${ext}`;
 }

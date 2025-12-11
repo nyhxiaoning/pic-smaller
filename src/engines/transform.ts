@@ -1,13 +1,15 @@
+import { CompressOption, Dimension, ImageInfo } from "./ImageBase";
+import { ImageItem, homeState } from "@/states/home";
+
+import { Mimes } from "@/mimes";
+import { OutputMessageData } from "./handler";
 import WorkerC from "./WorkerCompress?worker";
 import WorkerP from "./WorkerPreview?worker";
-import { useEffect } from "react";
-import { uniqId } from "@/functions";
-import { toJS } from "mobx";
-import { ImageItem, homeState } from "@/states/home";
-import { CompressOption, Dimension, ImageInfo } from "./ImageBase";
-import { OutputMessageData } from "./handler";
-import { Mimes } from "@/mimes";
+import { sharpCompress } from "@/services/sharpClient";
 import { svgConvert } from "./svgConvert";
+import { toJS } from "mobx";
+import { uniqId } from "@/functions";
+import { useEffect } from "react";
 
 export interface MessageData {
   info: ImageInfo;
@@ -82,6 +84,17 @@ function createPreviewTask(item: ImageItem) {
   workerP?.postMessage(createMessageData(item));
 }
 
+async function createSharpTask(item: ImageItem) {
+  try {
+    const output = await sharpCompress(item, homeState.option);
+    const exist = homeState.list.get(item.key);
+    if (exist) {
+      const updated = { ...exist, sharp: output } as ImageItem;
+      homeState.list.set(item.key, updated);
+    }
+  } catch (_) { }
+}
+
 /**
  * Handle image files
  * @param files
@@ -126,5 +139,6 @@ export async function createImageList(files: Array<File>) {
   homeState.list.forEach((item) => {
     createPreviewTask(item);
     createCompressTask(item);
+    createSharpTask(item);
   });
 }

@@ -14,6 +14,17 @@ export class GlobalState {
   public githubFolder: string = "";
   public githubOwner: string = "nyhxiaoning";
   public githubRepo: string = "gallary_d";
+  public githubFolderOptions: string[] = [
+    "animals",
+    "daily",
+    "landscape",
+    "person",
+    "street",
+    "architecture",
+    "food",
+    "other",
+    "theme",
+  ];
   constructor() {
     makeAutoObservable(this);
   }
