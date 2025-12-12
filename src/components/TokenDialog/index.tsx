@@ -35,7 +35,7 @@ export const TokenDialog = observer(() => {
       <Space>
         {/* <Typography.Text type="secondary">GitHub Token</Typography.Text> */}
         <Button onClick={onOpen}>
-          {gstate.githubToken ? "已设置，点击更新" : "设置 Token"}
+          {gstate.githubToken ? "提交" : "设置 Token"}
         </Button>
       </Space>
       <Modal

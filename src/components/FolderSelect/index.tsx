@@ -12,7 +12,7 @@ export const FolderSelect = observer(() => {
   }));
   return (
     <Space>
-      <Typography.Text type="secondary">文件夹</Typography.Text>
+      {/* <Typography.Text type="secondary">文件夹</Typography.Text> */}
       <Select
         style={{ minWidth: 180 }}
         placeholder="选择或新增"

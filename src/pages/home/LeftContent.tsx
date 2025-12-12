@@ -111,7 +111,7 @@ export const LeftContent = observer(() => {
               }}
             />
           </Tooltip>
-          <Tooltip title="使用 Sharp 压缩">
+          {/* <Tooltip title="使用 Sharp 压缩">
             <Button
               disabled={disabled}
               onClick={async () => {
@@ -133,7 +133,7 @@ export const LeftContent = observer(() => {
             >
               {!isMobile && "Sharp"}
             </Button>
-          </Tooltip>
+          </Tooltip> */}
           <Button
             disabled={disabled}
             icon={<ClearOutlined />}
