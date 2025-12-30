@@ -35,3 +35,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# 忽略package-lock.json文件
+package-lock.json
+pnpm-lock.yaml
