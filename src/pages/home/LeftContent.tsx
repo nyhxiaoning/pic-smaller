@@ -27,7 +27,7 @@ import { goto } from "@/router";
 import { gstate } from "@/global";
 import { homeState } from "@/states/home";
 import { observer } from "mobx-react-lite";
-import { sharpCompress } from "@/services/sharpClient";
+// import { sharpCompress } from "@/services/sharpClient";
 import style from "./index.module.scss";
 import { uploadState } from "@/states/upload";
 import { useColumn } from "./useColumn";

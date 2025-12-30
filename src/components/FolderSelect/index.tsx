@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Select, Space, Typography } from "antd";
+import { Button, Divider, Input, Select, Space } from "antd";
 
 import { gstate } from "@/global";
 import { observer } from "mobx-react-lite";
