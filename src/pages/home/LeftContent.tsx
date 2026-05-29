@@ -1,14 +1,11 @@
-import { Button, Flex, Space, Table, Tooltip, message } from "antd";
+import { Button, Flex, Space, Table, Tooltip } from "antd";
 import {
   ClearOutlined,
-  CloudUploadOutlined,
   DownloadOutlined,
-  EditOutlined,
   FolderAddOutlined,
   PlusOutlined,
   ReloadOutlined,
 } from "@ant-design/icons";
-import { blobToBase64, uploadFileToGithub } from "@/services/github";
 import {
   createDownload,
   getFilesFromHandle,
@@ -23,13 +20,11 @@ import { ImageInput } from "@/components/ImageInput";
 import { ProgressHint } from "@/components/ProgressHint";
 import { TokenDialog } from "@/components/TokenDialog";
 import { createImageList } from "@/engines/transform";
-import { goto } from "@/router";
 import { gstate } from "@/global";
 import { homeState } from "@/states/home";
 import { observer } from "mobx-react-lite";
 // import { sharpCompress } from "@/services/sharpClient";
 import style from "./index.module.scss";
-import { uploadState } from "@/states/upload";
 import { useColumn } from "./useColumn";
 import { useResponse } from "@/media";
 
@@ -143,11 +138,6 @@ export const LeftContent = observer(() => {
           >
             {!isMobile && gstate.locale?.listAction.clear}
           </Button>
-          <Tooltip title="重命名">
-            <Button disabled={disabled} icon={<EditOutlined />}>
-              {!isMobile && "重命名"}
-            </Button>
-          </Tooltip>
           <Button
             icon={<DownloadOutlined />}
             type="primary"
@@ -180,70 +170,6 @@ export const LeftContent = observer(() => {
             {!isMobile && gstate.locale?.listAction.downloadAll}
           </Button>
           <TokenDialog />
-          <Tooltip title="上传到GitHub">
-            <Button
-              icon={<CloudUploadOutlined />}
-              type="default"
-              disabled={disabled}
-              onClick={async () => {
-                try {
-                  const token = gstate.githubToken || "";
-                  const folder = gstate.githubFolder || "";
-                  if (!token) {
-                    message.warning("请先在输入框填写 GitHub Token");
-                    return;
-                  }
-                  if (!folder) {
-                    message.warning("请先选择或新增上传文件夹");
-                    return;
-                  }
-                  gstate.githubToken = token;
-                  gstate.loading = true;
-                  const owner = gstate.githubOwner;
-                  const repo = gstate.githubRepo;
-                  const branch = "main";
-                  const names: Set<string> = new Set();
-                  for (const [_, info] of homeState.list) {
-                    if (!info.compress?.blob) continue;
-                    const fileName = getOutputFileName(info, homeState.option);
-                    const uniqName = getUniqNameOnNames(names, fileName);
-                    names.add(uniqName);
-                    const path =
-                      (folder ? folder.replace(/^\/+|\/+$/g, "") + "/" : "") +
-                      uniqName;
-                    const contentBase64 = await blobToBase64(
-                      info.compress.blob,
-                    );
-                    const res = await uploadFileToGithub({
-                      owner,
-                      repo,
-                      branch,
-                      path,
-                      token,
-                      contentBase64,
-                      message: `upload ${uniqName}`,
-                    });
-                    uploadState.add({
-                      name: uniqName,
-                      path,
-                      webUrl: res.webUrl,
-                      rawUrl: res.rawUrl,
-                      sha: res.sha,
-                      size: info.compress.blob.size,
-                      time: Date.now(),
-                    });
-                  }
-                  message.success("上传完成");
-                  goto("/uploads");
-                } catch (err: any) {
-                  console.error(err);
-                  message.error(err?.message || "上传失败");
-                } finally {
-                  gstate.loading = false;
-                }
-              }}
-            />
-          </Tooltip>
         </Space>
         <ImageInput ref={fileRef} />
       </Flex>
