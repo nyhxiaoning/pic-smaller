@@ -39,7 +39,7 @@ export class PngImage extends ImageBase {
       Module._free(buffer);
       Module._free(outputSizePointer);
 
-      const blob = new Blob([output], { type: this.info.blob.type });
+      const blob = new Blob([output as BlobPart], { type: this.info.blob.type });
       return {
         width,
         height,
