@@ -29,6 +29,7 @@ const localeData: LocaleData = {
     fetching: "Fetching images...",
     emptyHint: "Please enter at least one URL",
     errorTitle: "Failed to fetch some images",
+    retryFailed: "Retry failed URLs",
   },
   columnTitle: {
     status: "Status",

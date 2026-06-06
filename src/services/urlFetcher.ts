@@ -19,6 +19,20 @@ async function base64ToFile(base64: string, mime: string, name: string): Promise
   return new File([blob], name, { type: mime });
 }
 
+function getHumanReadableError(status: number): string {
+  const map: Record<number, string> = {
+    400: "Bad request",
+    403: "Access denied (forbidden)",
+    404: "Image not found (404)",
+    413: "Image too large",
+    415: "Unsupported media type",
+    500: "Remote server error",
+    502: "Remote server unavailable",
+    504: "Remote server timeout",
+  };
+  return map[status] || `HTTP error ${status}`;
+}
+
 export async function fetchUrlAsFile(url: string): Promise<{ file: File; originalUrl: string }> {
   const res = await fetch("/api/fetch-image", {
     method: "POST",
@@ -26,8 +40,7 @@ export async function fetchUrlAsFile(url: string): Promise<{ file: File; origina
     body: JSON.stringify({ url }),
   });
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw new Error(data?.error || `Fetch failed: ${res.status}`);
+    throw new Error(getHumanReadableError(res.status));
   }
   const json = await res.json();
   const { base64, mime, name } = json;

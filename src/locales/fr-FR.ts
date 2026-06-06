@@ -30,6 +30,7 @@ const localeData: LocaleData = {
     fetching: "Récupération des images...",
     emptyHint: "Veuillez entrer au moins une URL",
     errorTitle: "Échec de la récupération de certaines images",
+    retryFailed: "Réessayer les URLs échouées",
   },
   columnTitle: {
     status: "Status",

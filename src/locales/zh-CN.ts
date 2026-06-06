@@ -28,6 +28,7 @@ const localeData: LocaleData = {
     fetching: "正在获取图片...",
     emptyHint: "请至少输入一个 URL",
     errorTitle: "部分图片获取失败",
+    retryFailed: "重试失败链接",
   },
   columnTitle: {
     status: "状态",

@@ -32,6 +32,7 @@ const localeData: LocaleData = {
     fetching: "画像を取得中...",
     emptyHint: "少なくとも1つのURLを入力してください",
     errorTitle: "一部の画像の取得に失敗しました",
+    retryFailed: "失敗したURLを再試行",
   },
   columnTitle: {
     status: "ステータス",

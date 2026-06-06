@@ -30,6 +30,7 @@ const localeData: LocaleData = {
     fetching: "در حال دریافت تصاویر...",
     emptyHint: "حداقل یک URL وارد کنید",
     errorTitle: "برخی تصاویر دریافت نشدند",
+    retryFailed: "تلاش مجدد برای URLهای ناموفق",
   },
   columnTitle: {
     status: "وضعیت",

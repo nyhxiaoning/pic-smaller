@@ -107,6 +107,16 @@ export const UrlInputDialog = observer(() => {
                 {e.url}: {e.error}
               </div>
             ))}
+            <Button
+              size="small"
+              style={{ marginTop: 8 }}
+              onClick={() => {
+                setUrlText(errors.map((e) => e.url).join("\n"));
+                setErrors([]);
+              }}
+            >
+              {locale?.retryFailed || "Retry failed URLs"}
+            </Button>
           </div>
         )}
       </Modal>

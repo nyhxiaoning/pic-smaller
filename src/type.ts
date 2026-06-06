@@ -31,6 +31,7 @@ export interface LocaleData {
     fetching: string;
     emptyHint: string;
     errorTitle: string;
+    retryFailed: string;
   };
   columnTitle: {
     status: string;

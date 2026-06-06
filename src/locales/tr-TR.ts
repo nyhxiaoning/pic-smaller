@@ -30,6 +30,7 @@ const localeData: LocaleData = {
     fetching: "Resimler getiriliyor...",
     emptyHint: "En az bir URL girin",
     errorTitle: "Bazı resimler getirilemedi",
+    retryFailed: "Başarısız URL'leri yeniden dene",
   },
   columnTitle: {
     status: "Durum",

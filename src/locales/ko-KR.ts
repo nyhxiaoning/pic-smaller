@@ -32,6 +32,7 @@ const localeData: LocaleData = {
     fetching: "이미지를 가져오는 중...",
     emptyHint: "최소한 하나의 URL을 입력하세요",
     errorTitle: "일부 이미지를 가져오지 못했습니다",
+    retryFailed: "실패한 URL 재시도",
   },
   columnTitle: {
     status: "상태",

@@ -30,6 +30,7 @@ const localeData: LocaleData = {
     fetching: "正在取得圖片...",
     emptyHint: "請至少輸入一個 URL",
     errorTitle: "部分圖片取得失敗",
+    retryFailed: "重試失敗連結",
   },
   columnTitle: {
     status: "狀態",
