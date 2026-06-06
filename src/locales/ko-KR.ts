@@ -17,11 +17,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "일괄 추가",
     addFolder: "폴더 추가",
+    addUrl: "URL",
     clear: "목록 지우기",
     downloadAll: "모두 저장",
     downloadOne: "이미지 저장",
     removeOne: "사진 제거",
     reCompress: "재압축",
+  },
+  urlInput: {
+    title: "URL에서 이미지 가져오기",
+    placeholder: "이미지 URL을 한 줄에 하나씩 입력하세요",
+    confirm: "가져오기",
+    cancel: "취소",
+    fetching: "이미지를 가져오는 중...",
+    emptyHint: "최소한 하나의 URL을 입력하세요",
+    errorTitle: "일부 이미지를 가져오지 못했습니다",
   },
   columnTitle: {
     status: "상태",

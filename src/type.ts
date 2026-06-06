@@ -16,11 +16,21 @@ export interface LocaleData {
   listAction: {
     batchAppend: string;
     addFolder: string;
+    addUrl: string;
     clear: string;
     downloadAll: string;
     downloadOne: string;
     removeOne: string;
     reCompress: string;
+  };
+  urlInput: {
+    title: string;
+    placeholder: string;
+    confirm: string;
+    cancel: string;
+    fetching: string;
+    emptyHint: string;
+    errorTitle: string;
   };
   columnTitle: {
     status: string;

@@ -17,11 +17,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "バッチ追加",
     addFolder: "フォルダーを追加",
+    addUrl: "URL",
     clear: "リストをクリア",
     downloadAll: "すべて保存",
     downloadOne: "画像を保存",
     removeOne: "画像を削除",
     reCompress: "再圧縮",
+  },
+  urlInput: {
+    title: "URLから画像をインポート",
+    placeholder: "画像URLを1行に1つ入力",
+    confirm: "取得",
+    cancel: "キャンセル",
+    fetching: "画像を取得中...",
+    emptyHint: "少なくとも1つのURLを入力してください",
+    errorTitle: "一部の画像の取得に失敗しました",
   },
   columnTitle: {
     status: "ステータス",

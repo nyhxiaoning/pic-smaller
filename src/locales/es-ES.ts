@@ -16,11 +16,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "Añadir imagenes",
     addFolder: "Añadir carpeta",
+    addUrl: "URL",
     clear: "Eliminar todas",
     downloadAll: "Guardar todas",
     downloadOne: "Guardar imagen",
     removeOne: "Eliminar imagen",
     reCompress: "Recomprimir",
+  },
+  urlInput: {
+    title: "Importar imágenes desde URL",
+    placeholder: "Introduce las URL de las imágenes, una por línea",
+    confirm: "Obtener",
+    cancel: "Cancelar",
+    fetching: "Obteniendo imágenes...",
+    emptyHint: "Introduce al menos una URL",
+    errorTitle: "No se pudieron obtener algunas imágenes",
   },
   columnTitle: {
     status: "Estado",

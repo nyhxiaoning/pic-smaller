@@ -14,11 +14,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "Batch append",
     addFolder: "Add folder",
+    addUrl: "URL",
     clear: "Clear all",
     downloadAll: "Save all",
     downloadOne: "Save image",
     removeOne: "Remove image",
     reCompress: "Recompress",
+  },
+  urlInput: {
+    title: "Import images from URL",
+    placeholder: "Enter image URLs, one per line",
+    confirm: "Fetch",
+    cancel: "Cancel",
+    fetching: "Fetching images...",
+    emptyHint: "Please enter at least one URL",
+    errorTitle: "Failed to fetch some images",
   },
   columnTitle: {
     status: "Status",

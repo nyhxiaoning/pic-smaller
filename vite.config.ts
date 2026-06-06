@@ -12,6 +12,48 @@ function sharpMiddleware(): Plugin {
     name: "sharp-middleware",
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
+        if (req.method === "POST" && req.url === "/api/fetch-image") {
+          try {
+            const chunks: Buffer[] = [];
+            req.on("data", (c) => chunks.push(Buffer.isBuffer(c) ? c : Buffer.from(c)));
+            await new Promise<void>((resolve) => req.on("end", () => resolve()));
+            const body = JSON.parse(Buffer.concat(chunks).toString("utf-8"));
+            const { url } = body || {};
+            if (!url || !/^https?:\/\/.+/.test(url)) {
+              res.statusCode = 400;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: "Invalid URL" }));
+              return;
+            }
+            const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
+            if (!response.ok) {
+              res.statusCode = 502;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: `Fetch failed: ${response.status}` }));
+              return;
+            }
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.startsWith("image/")) {
+              res.statusCode = 400;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: "URL does not point to an image" }));
+              return;
+            }
+            const buffer = Buffer.from(await response.arrayBuffer());
+            const base64 = buffer.toString("base64");
+            const urlObj = new URL(url);
+            const name = urlObj.pathname.split("/").filter(Boolean).pop() || "image";
+            const json = JSON.stringify({ base64, mime: contentType, name });
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.end(json);
+          } catch (e: any) {
+            res.statusCode = 502;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ error: e?.message || "fetch error" }));
+          }
+          return;
+        }
         if (req.method === "POST" && req.url === "/api/sharp-compress") {
           try {
             const chunks: Buffer[] = [];
@@ -60,6 +102,48 @@ function sharpMiddleware(): Plugin {
     configurePreviewServer(server) {
       // Same middleware for preview
       server.middlewares.use(async (req, res, next) => {
+        if (req.method === "POST" && req.url === "/api/fetch-image") {
+          try {
+            const chunks: Buffer[] = [];
+            req.on("data", (c) => chunks.push(Buffer.isBuffer(c) ? c : Buffer.from(c)));
+            await new Promise<void>((resolve) => req.on("end", () => resolve()));
+            const body = JSON.parse(Buffer.concat(chunks).toString("utf-8"));
+            const { url } = body || {};
+            if (!url || !/^https?:\/\/.+/.test(url)) {
+              res.statusCode = 400;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: "Invalid URL" }));
+              return;
+            }
+            const response = await fetch(url, { signal: AbortSignal.timeout(30000) });
+            if (!response.ok) {
+              res.statusCode = 502;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: `Fetch failed: ${response.status}` }));
+              return;
+            }
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.startsWith("image/")) {
+              res.statusCode = 400;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: "URL does not point to an image" }));
+              return;
+            }
+            const buffer = Buffer.from(await response.arrayBuffer());
+            const base64 = buffer.toString("base64");
+            const urlObj = new URL(url);
+            const name = urlObj.pathname.split("/").filter(Boolean).pop() || "image";
+            const json = JSON.stringify({ base64, mime: contentType, name });
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "application/json");
+            res.end(json);
+          } catch (e: any) {
+            res.statusCode = 502;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ error: e?.message || "fetch error" }));
+          }
+          return;
+        }
         if (req.method === "POST" && req.url === "/api/sharp-compress") {
           try {
             const chunks: Buffer[] = [];

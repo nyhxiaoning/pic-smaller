@@ -15,11 +15,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "افزودن دسته‌ای",
     addFolder: "افزودن پوشه",
+    addUrl: "URL",
     clear: "پاک کردن همه",
     downloadAll: "ذخیره همه",
     downloadOne: "بارگذاری تصویر",
     removeOne: "پاک کردن تصویر",
     reCompress: "فشرده‌سازی مجدد",
+  },
+  urlInput: {
+    title: "وارد کردن تصاویر از URL",
+    placeholder: "URL تصاویر را وارد کنید، هر خط یک URL",
+    confirm: "دریافت",
+    cancel: "لغو",
+    fetching: "در حال دریافت تصاویر...",
+    emptyHint: "حداقل یک URL وارد کنید",
+    errorTitle: "برخی تصاویر دریافت نشدند",
   },
   columnTitle: {
     status: "وضعیت",

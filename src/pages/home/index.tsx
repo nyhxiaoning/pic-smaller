@@ -7,7 +7,7 @@ import { gstate } from "@/global";
 import { changeLang, langList } from "@/locale";
 import { homeState } from "@/states/home";
 import { wait } from "@/functions";
-import { UploadCard } from "@/components/UploadCard";
+
 import { useWorkerHandler } from "@/engines/transform";
 import { Compare } from "@/components/Compare";
 import { useResponse } from "@/media";
@@ -71,14 +71,8 @@ const Header = observer(() => {
 const Body = observer(() => {
   return (
     <Flex align="stretch" className={style.main}>
-      {homeState.list.size === 0 ? (
-        <UploadCard />
-      ) : (
-        <>
-          <LeftContent />
-          <RightOption />
-        </>
-      )}
+      <LeftContent />
+      <RightOption />
     </Flex>
   );
 });

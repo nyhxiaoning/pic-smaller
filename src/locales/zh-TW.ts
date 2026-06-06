@@ -15,11 +15,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "大量新增",
     addFolder: "新增資料夾",
+    addUrl: "URL",
     clear: "清空清單",
     downloadAll: "儲存全部",
     downloadOne: "儲存圖片",
     removeOne: "移除圖片",
     reCompress: "重新壓縮",
+  },
+  urlInput: {
+    title: "從 URL 匯入圖片",
+    placeholder: "輸入圖片 URL，每行一個",
+    confirm: "取得",
+    cancel: "取消",
+    fetching: "正在取得圖片...",
+    emptyHint: "請至少輸入一個 URL",
+    errorTitle: "部分圖片取得失敗",
   },
   columnTitle: {
     status: "狀態",

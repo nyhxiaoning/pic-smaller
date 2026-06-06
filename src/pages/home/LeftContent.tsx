@@ -19,6 +19,8 @@ import { FolderSelect } from "@/components/FolderSelect";
 import { ImageInput } from "@/components/ImageInput";
 import { ProgressHint } from "@/components/ProgressHint";
 import { TokenDialog } from "@/components/TokenDialog";
+import { UploadCard } from "@/components/UploadCard";
+import { UrlInputDialog } from "@/components/UrlInputDialog";
 import { createImageList } from "@/engines/transform";
 import { gstate } from "@/global";
 import { homeState } from "@/states/home";
@@ -91,12 +93,16 @@ export const LeftContent = observer(() => {
               {!isMobile && gstate.locale?.listAction.addFolder}
             </Button>
           )}
+          <UrlInputDialog />
         </Space>
         <Space>
+          {/* 选择文件夹 */}
           <FolderSelect />
+          {/* 重命名 */}
           <BatchRenameDialog />
 
           {/* <TokenInput /> */}
+          {/* 压缩 */}
           <Tooltip title={gstate.locale?.listAction.reCompress}>
             <Button
               disabled={disabled}
@@ -129,6 +135,7 @@ export const LeftContent = observer(() => {
               {!isMobile && "Sharp"}
             </Button>
           </Tooltip> */}
+          {/* 清理所有 */}
           <Button
             disabled={disabled}
             icon={<ClearOutlined />}
@@ -138,6 +145,7 @@ export const LeftContent = observer(() => {
           >
             {!isMobile && gstate.locale?.listAction.clear}
           </Button>
+          {/* save all */}
           <Button
             icon={<DownloadOutlined />}
             type="primary"
@@ -173,18 +181,24 @@ export const LeftContent = observer(() => {
         </Space>
         <ImageInput ref={fileRef} />
       </Flex>
-      <div ref={scrollBoxRef}>
-        <Table
-          columns={columns}
-          size="small"
-          pagination={false}
-          scroll={scrollHeight ? { y: scrollHeight } : undefined}
-          dataSource={Array.from(homeState.list.values())}
-        />
-      </div>
-      <Flex align="center">
-        <ProgressHint />
-      </Flex>
+      {homeState.list.size === 0 ? (
+        <UploadCard />
+      ) : (
+        <>
+          <div ref={scrollBoxRef}>
+            <Table
+              columns={columns}
+              size="small"
+              pagination={false}
+              scroll={scrollHeight ? { y: scrollHeight } : undefined}
+              dataSource={Array.from(homeState.list.values())}
+            />
+          </div>
+          <Flex align="center">
+            <ProgressHint />
+          </Flex>
+        </>
+      )}
     </Flex>
   );
 });

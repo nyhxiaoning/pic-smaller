@@ -15,11 +15,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "Toplu ekle",
     addFolder: "Klasör ekle",
+    addUrl: "URL",
     clear: "Hepsini temizle",
     downloadAll: "Hepsini İndir",
     downloadOne: "İndir",
     removeOne: "Sil",
     reCompress: "Yeniden sıkıştır",
+  },
+  urlInput: {
+    title: "URL'den resim içe aktar",
+    placeholder: "Resim URL'lerini girin, her satıra bir tane",
+    confirm: "Getir",
+    cancel: "İptal",
+    fetching: "Resimler getiriliyor...",
+    emptyHint: "En az bir URL girin",
+    errorTitle: "Bazı resimler getirilemedi",
   },
   columnTitle: {
     status: "Durum",

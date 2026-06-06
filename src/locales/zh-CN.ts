@@ -13,11 +13,21 @@ const localeData: LocaleData = {
   listAction: {
     batchAppend: "批量添加",
     addFolder: "添加文件夹",
+    addUrl: "URL",
     clear: "清空",
     downloadAll: "保存全部",
     downloadOne: "保存图片",
     removeOne: "移除图片",
     reCompress: "重新压缩",
+  },
+  urlInput: {
+    title: "从 URL 导入图片",
+    placeholder: "输入图片 URL，每行一个",
+    confirm: "获取",
+    cancel: "取消",
+    fetching: "正在获取图片...",
+    emptyHint: "请至少输入一个 URL",
+    errorTitle: "部分图片获取失败",
   },
   columnTitle: {
     status: "状态",
