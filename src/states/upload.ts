@@ -5,6 +5,7 @@ export type UploadRecord = {
     path: string;
     webUrl: string;
     rawUrl: string;
+    gitUrl: string;
     sha?: string;
     size: number;
     time: number;
@@ -17,6 +18,9 @@ export class UploadState {
     }
     add(record: UploadRecord) {
         this.records.unshift(record);
+    }
+    remove(index: number) {
+        this.records.splice(index, 1);
     }
     clear() {
         this.records = [];

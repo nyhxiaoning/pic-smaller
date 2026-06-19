@@ -59,10 +59,12 @@ export async function uploadFileToGithub(params: GithubUploadParams) {
 
     const webUrl = result.data.content?.html_url || `https://github.com/${owner}/${repo}/blob/${branch}/${path}`;
     const rawUrl = `https://github.com/${owner}/${repo}/raw/${branch}/${path}`;
+    const gitUrl = result.data.content?.git_url || `https://api.github.com/repos/${owner}/${repo}/git/blobs/${result.data.content?.sha}`;
 
     return {
         webUrl,
         rawUrl,
+        gitUrl,
         sha: result.data.content?.sha,
         path,
     };

@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Modal, Select, Space, message } from "antd";
+import { Button, Checkbox, Divider, Input, Modal, Popconfirm, Select, Space, message } from "antd";
 
 import { gstate } from "@/global";
 import { observer } from "mobx-react-lite";
@@ -14,6 +14,7 @@ export const TokenDialog = observer(() => {
   const [value, setValue] = useState("");
   const [folderName, setFolderName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [useCompressed, setUseCompressed] = useState(true);
 
   const token = gstate.githubToken || "";
   const folder = gstate.githubFolder || "";
@@ -62,13 +63,14 @@ export const TokenDialog = observer(() => {
       const names: Set<string> = new Set();
 
       for (const [_, info] of homeState.list) {
-        if (!info.compress?.blob) continue;
+        const blob = useCompressed ? info.compress?.blob : info.blob;
+        if (!blob) continue;
         const fileName = getOutputFileName(info, homeState.option);
         const uniqName = getUniqNameOnNames(names, fileName);
         names.add(uniqName);
         const path =
           (folder.replace(/^\/+|\/+$/g, "") + "/") + uniqName;
-        const contentBase64 = await blobToBase64(info.compress.blob);
+        const contentBase64 = await blobToBase64(blob);
         const res = await uploadFileToGithub({
           owner,
           repo,
@@ -83,14 +85,15 @@ export const TokenDialog = observer(() => {
           path,
           webUrl: res.webUrl,
           rawUrl: res.rawUrl,
+          gitUrl: res.gitUrl,
           sha: res.sha,
-          size: info.compress.blob.size,
+          size: blob.size,
           time: Date.now(),
         });
       }
       message.success("上传完成");
-      setOpen(false);
       goto("/uploads");
+      setOpen(false);
     } catch (err: any) {
       console.error(err);
       message.error(err?.message || "上传失败");
@@ -106,9 +109,22 @@ export const TokenDialog = observer(() => {
 
   return (
     <>
-      <Button onClick={onOpen}>
-        {token ? "提交" : "设置 Token"}
-      </Button>
+      <Space>
+        <Button onClick={onOpen}>
+          {token ? "提交" : "设置 Token"}
+        </Button>
+        <Popconfirm
+          title="确定移除列表中的所有图片？"
+          onConfirm={() => {
+            homeState.clear();
+            message.success("已移除所有图片");
+          }}
+          okText="确定"
+          cancelText="取消"
+        >
+          <Button danger>移除所有图片</Button>
+        </Popconfirm>
+      </Space>
       <Modal
         title="GitHub 设置与上传"
         open={open}
@@ -192,6 +208,12 @@ export const TokenDialog = observer(() => {
               </div>
             )}
           />
+          <Checkbox
+            checked={useCompressed}
+            onChange={(e) => setUseCompressed(e.target.checked)}
+          >
+            使用压缩后的图片上传
+          </Checkbox>
         </Space>
       </Modal>
     </>
